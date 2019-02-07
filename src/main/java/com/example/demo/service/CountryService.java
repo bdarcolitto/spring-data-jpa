@@ -46,5 +46,9 @@ public class CountryService {
         return CountryConverter.toVO( countryRepository.findAll( spec, pageable) );
     }
 
+    public void create(final CountryVO countryVO) {
+        final Optional<CountryEntity> countryEntity = CountryConverter.toEntity(countryVO);
+        countryEntity.ifPresent( countryRepository::save );
+    }
 
 }

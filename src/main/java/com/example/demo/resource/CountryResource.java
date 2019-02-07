@@ -6,11 +6,9 @@ import com.example.demo.vo.PageVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
 import java.util.List;
@@ -31,15 +29,18 @@ public class CountryResource {
         return new ResponseEntity<>(countryService.findAll(), HttpStatus.OK);
     }
 
+
     @GetMapping("/list") // http://localhost:8080/jpa/country/list?page=1&size=3&sort=code,DESC
     public ResponseEntity<PageVO<CountryVO>> findAllPageable(final Pageable pageable) {
         return new ResponseEntity<>(countryService.findAll(pageable), HttpStatus.OK);
     }
 
+
     @GetMapping("/{code}") // http://localhost:8080/jpa/country/AIA
     public ResponseEntity<Optional<CountryVO>> findByCountryCode(@PathVariable("code") final String code) {
         return new ResponseEntity<>(countryService.findByCountryCode(code), HttpStatus.OK);
     }
+
 
     // JPA WITH @QUERY
 
@@ -47,6 +48,7 @@ public class CountryResource {
     public ResponseEntity<PageVO<CountryVO>> findAllWithCitiesPageable(final Pageable pageable) {
         return new ResponseEntity<>(countryService.findAllWithCitiesPageable(pageable), HttpStatus.OK);
     }
+
 
     // SPECIFICATION
 
@@ -59,5 +61,31 @@ public class CountryResource {
         return new ResponseEntity<>(countryService
                 .findByPopulationAndSurfaceArea(pageable, population, surfaceArea), HttpStatus.OK
         );
+    }
+
+    // CREATE
+
+    /*    {
+        "capital": 348938,
+            "code": "AAA",
+            "code2": "A",
+            "continent": "Oceania",
+            "gnp": 0,
+            "gnpOld": 0,
+            "governmentForm": "Democaria",
+            "headOfState": "Head",
+            "indepYear": 0,
+            "lifeExpectancy": 0,
+            "localName": "localName",
+            "name": "Name",
+            "population": 0,
+            "region": "CACACACA",
+            "surfaceArea": 0
+    }*/
+
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE) // http://localhost:8080/jpa/country/create
+    public ResponseEntity create( @RequestBody final CountryVO countryVO) {
+        countryService.create(countryVO);
+        return ResponseEntity.ok().build();
     }
 }

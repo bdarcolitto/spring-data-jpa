@@ -61,4 +61,15 @@ public class CountryConverter {
 
         return new PageVO<>(countryVOS, page.getTotalPages(), page.getTotalElements());
     }
+
+    public static Optional<CountryEntity> toEntity(final CountryVO countryVO) {
+
+        if( Objects.isNull(countryVO) ) {
+            return Optional.empty();
+        }
+
+        final CountryEntity countryEntity = new CountryEntity();
+        BeanUtils.copyProperties(countryVO, countryEntity);
+        return Optional.of(countryEntity);
+    }
 }
