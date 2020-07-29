@@ -1,5 +1,6 @@
 package com.example.demo.resource;
 
+import com.example.demo.kafka.CityKafkaProducer;
 import com.example.demo.service.CountryService;
 import com.example.demo.vo.CountryVO;
 import com.example.demo.vo.PageVO;
@@ -21,11 +22,15 @@ public class CountryResource {
     @Autowired
     private CountryService countryService;
 
+    @Autowired
+    CityKafkaProducer cityKafkaProducer;
+
 
     ///// JPA
 
     @GetMapping("/list-all") // http://localhost:8080/jpa/country/list-all
     public ResponseEntity<List<CountryVO>> findAll() {
+        cityKafkaProducer.producerCity(1,"teste");
         return new ResponseEntity<>(countryService.findAll(), HttpStatus.OK);
     }
 
